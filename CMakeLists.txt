@@ -1,7 +1,8 @@
 cmake_minimum_required( VERSION 3.16 )
 
 include( cmake/GitProjectVersion.cmake )
-
+set (CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 project( 
     T8CODE
     DESCRIPTION "Parallel algorithms and data structures for tree-based AMR with arbitrary element shapes."
@@ -31,6 +32,8 @@ option( T8CODE_BUILD_FORTRAN_INTERFACE "Build t8code's Fortran interface" OFF )
 
 option( T8CODE_ENABLE_MPI "Enable t8code's features which rely on MPI" ON )
 option( T8CODE_ENABLE_VTK "Enable t8code's features which rely on VTK" OFF )
+option(T8CODE_ENABLE_GSL "Enable t8code's features which rely on GSL" OFF)
+option(T8CODE_ENABLE_UNORDERED_DENSE "Enable t8code's features which rely on unordered_dense" OFF)
 option( T8CODE_ENABLE_OCC "Enable t8code's features which rely on OpenCASCADE" OFF )
 option( T8CODE_ENABLE_NETCDF "Enable t8code's features which rely on netCDF" OFF )
 
@@ -85,6 +88,36 @@ if( T8CODE_ENABLE_VTK )
         message("Found VTK")
     endif (VTK_FOUND)
 endif( T8CODE_ENABLE_VTK )
+
+if(T8CODE_ENABLE_GSL)
+    # Look for GSL package
+    find_package(GSL REQUIRED)
+
+    if(GSL_FOUND)
+        message(STATUS "Found GSL")
+    endif (GSL_FOUND)
+endif(T8CODE_ENABLE_GSL)
+
+if(T8CODE_ENABLE_UNORDERED_DENSE)
+    # Find the unordered_dense package
+    find_package(unordered_dense CONFIG REQUIRED)
+  # Manually set UNORDERED_DENSE_FOUND if not already set
+  if (NOT DEFINED UNORDERED_DENSE_FOUND)
+    # Check if the target exists (this confirms the package is properly found)
+    if (NOT TARGET unordered_dense::unordered_dense)
+      set(UNORDERED_DENSE_FOUND FALSE)
+    else()
+      set(UNORDERED_DENSE_FOUND TRUE)
+    endif()
+  endif()
+
+  # Output status message depending on whether it was found
+  if (NOT UNORDERED_DENSE_FOUND)
+    message(STATUS "unordered_dense not found")
+  else()
+    message(STATUS "unordered_dense found")
+  endif()
+endif(T8CODE_ENABLE_UNORDERED_DENSE)
 
 if( T8CODE_ENABLE_OCC )
     find_package( OpenCASCADE REQUIRED COMPONENTS

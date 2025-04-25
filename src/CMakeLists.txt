@@ -69,6 +69,54 @@ if( T8CODE_ENABLE_VTK )
     target_link_libraries( T8 PUBLIC ${VTK_LIBRARIES} )
 endif()
 
+if( T8CODE_ENABLE_GSL )
+  # Link the GSL library to the T8 target
+  target_link_libraries( T8 PUBLIC GSL::gsl GSL::gslcblas)
+
+  # Define preprocessor macro for enabling GSL
+  target_compile_definitions(T8 PUBLIC T8_ENABLE_GSL=1)
+
+  # Add source files related to GSL functionality (if any)
+  target_sources( T8 PRIVATE
+    t8_mra/t8_gsl.cxx
+  )
+
+  # Install related GSL header files
+  install( FILES
+    t8_mra/t8_gsl.hxx
+    DESTINATION include)
+endif()
+
+if( T8CODE_ENABLE_UNORDERED_DENSE )
+  # Check if unordered_dense is available and if not, add a message to inform the user
+  target_link_libraries(T8 PUBLIC unordered_dense::unordered_dense)
+  # Define preprocessor macro for enabling unordered_dense
+  target_compile_definitions(T8 PUBLIC T8_ENABLE_UNORDERED_DENSE=1)
+
+  # Add source files related to unordered_dense functionality (if any)
+  target_sources( T8 PRIVATE
+    t8_mra/t8_unordered_dense.cxx
+    t8_mra/t8_mra.cxx
+    t8_mra/vecmat.cxx
+    t8_mra/basis_functions.cxx
+    t8_mra/dunavant.cxx
+    t8_mra/mask_coefficients.cxx
+  )
+
+  # Install related unordered_dense header files
+  install( FILES
+    t8_mra/t8_unordered_dense.hxx
+    t8_mra/t8_mra.hxx
+    t8_mra/vecmat.hxx
+    t8_mra/basis_functions.hxx
+    t8_mra/dunavant.hxx
+    t8_mra/mask_coefficients.hxx
+    DESTINATION include)
+
+endif()
+
+
+
 if( T8CODE_ENABLE_OCC )
     target_compile_definitions( T8 PUBLIC T8_ENABLE_OCC=1 )
     target_include_directories( T8 SYSTEM PUBLIC ${OpenCASCADE_INCLUDE_DIR} )
