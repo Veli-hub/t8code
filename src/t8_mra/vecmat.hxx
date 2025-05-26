@@ -48,6 +48,7 @@ public:
 	~vec()
 	{
 		delete[] a;
+		a = nullptr;
 	}
 
 	/// Zugriffsoperator
@@ -117,6 +118,7 @@ public:
 	{
 		if (n != nn) {
 			delete[] a;
+			a = nullptr;
 			a = new double[nn];
 			n = nn;
 		}
@@ -212,6 +214,7 @@ public:
 	~mat()
 	{
 		delete[] a;
+		a = nullptr;
 	}
 
 	/// Zugriffsoperator

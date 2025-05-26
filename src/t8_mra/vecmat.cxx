@@ -47,6 +47,7 @@ void mat::resize(int mm, int nn)
 {
   if (m != mm || n != nn) {
     delete[] a;
+    a = nullptr;
     a = new double[mm*nn];
     m = mm;
     n = nn;

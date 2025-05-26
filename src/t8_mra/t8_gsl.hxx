@@ -10,7 +10,7 @@
 #include <gsl/gsl_spline2d.h>
 
 typedef double (*func)(double, double);
-typedef double (*spline)(const gsl_spline2d *spline, const double x, const double y, gsl_interp_accel *xacc, gsl_interp_accel *yacc);
+typedef double (*spline)(const gsl_spline2d *spline, gsl_interp_accel *xacc, gsl_interp_accel *yacc);
 
 // Function to read MPTRAC data
 void read_mptrac_data(const std::string& filename, float* fileData, size_t dataSize);
